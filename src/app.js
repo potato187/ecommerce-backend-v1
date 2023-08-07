@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -12,7 +13,7 @@ app.use(morgan('dev'));
 app.use(compression());
 
 // config database
-require('@/dbs/mongodb.init');
+require('@/dbs').mongodInit;
 
 // config routes
 

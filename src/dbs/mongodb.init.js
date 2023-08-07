@@ -1,16 +1,43 @@
 'use strict';
-
 const mongoose = require('mongoose');
+const { mongodConfig } = require('@/configs');
+const { mongoHelpers } = require('@/helpers');
 
-const connectURI = 'mongodb://127.0.0.1:27017/e-commerce-v1';
+const {
+	db: { host, port, name },
+} = mongodConfig;
+const connectURI = `mongodb://${host}:${port}/${name}`;
 
-mongoose
-	.connect(connectURI)
-	.then((_) => {
-		console.log('eCommerce Connected Mongodb Success.');
-	})
-	.catch((err) => {
-		console.log(err);
-	});
+class Database {
+	constructor() {
+		this.connect();
+	}
 
-module.exports = mongoose;
+	connect(type = 'mongodb') {
+		if (process.env.NODE_ENV === 'dev') {
+			mongoose.set('debug', true);
+			mongoose.set('debug', { color: true });
+		}
+
+		mongoose
+			.connect(connectURI, { useNewUrlParser: true, useUnifiedTopology: true, maxPoolSize: 50 })
+			.then((_) => {
+				console.log('eCommerce Connected MongoDB Success.');
+				mongoHelpers.checkOverLoad();
+			})
+			.catch((err) => {
+				console.error('Error connecting to MongoDB:', err);
+			});
+	}
+
+	static getInstance() {
+		if (!Database.instance) {
+			Database.instance = new Database();
+		}
+
+		return Database.instance;
+	}
+}
+
+const instanceMongoDB = Database.getInstance();
+module.exports = instanceMongoDB;
