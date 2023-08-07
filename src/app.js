@@ -11,17 +11,14 @@ const app = express();
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(compression());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // config database
 require('@/dbs').mongodInit;
 
 // config routes
-
-app.get('/', (req, res) => {
-	return res.status(200).json({
-		message: 'message from server',
-	});
-});
+app.use('/v1/api', require('./routes'));
 
 // handling errors
 

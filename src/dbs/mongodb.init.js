@@ -23,7 +23,7 @@ class Database {
 			.connect(connectURI, { useNewUrlParser: true, useUnifiedTopology: true, maxPoolSize: 50 })
 			.then((_) => {
 				console.log('eCommerce Connected MongoDB Success.');
-				mongoHelpers.checkOverLoad();
+				/* 	mongoHelpers.checkOverLoad(); */
 			})
 			.catch((err) => {
 				console.error('Error connecting to MongoDB:', err);

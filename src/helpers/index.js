@@ -1,3 +1,3 @@
 module.exports = {
-	mongoHelpers: require('./mongodb.helper'),
+	mongoHelper: require('./mongodb.helper'),
 };
