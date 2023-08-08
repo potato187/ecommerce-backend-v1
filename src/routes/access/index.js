@@ -1,9 +1,10 @@
 'use strict';
 
-const controllers = require('@/controllers');
+const { AccessController } = require('@/controllers');
+const { tryCatch } = require('@/middleware');
 const express = require('express');
 const router = express.Router();
 
-router.post('/signup', controllers.AccessController.signUp);
+router.post('/signup', tryCatch(AccessController.signUp));
 
 module.exports = router;

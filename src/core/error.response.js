@@ -1,5 +1,4 @@
 'use strict';
-
 const { ReasonPhrases, StatusCodes } = require('@/httpStatusCode');
 
 class ErrorResponse extends Error {
@@ -10,26 +9,40 @@ class ErrorResponse extends Error {
 }
 
 class ForbiddenRequestError extends ErrorResponse {
-	constructor(message = ReasonPhrases.FORBIDDEN, status = StatusCodes.FORBIDDEN) {
-		super(message, status);
+	constructor(message = ReasonPhrases.FORBIDDEN, statusCode = StatusCodes.FORBIDDEN) {
+		super(message, statusCode);
 	}
 }
 
 class BadRequestError extends ErrorResponse {
-	constructor(message = ReasonPhrases.BAD_REQUEST, status = StatusCodes.BAD_REQUEST) {
-		super(message, status);
+	constructor(message = ReasonPhrases.BAD_REQUEST, statusCode = StatusCodes.BAD_REQUEST) {
+		super(message, statusCode);
 	}
 }
 
 class ConflictRequestError extends ErrorResponse {
-	constructor(message = ReasonPhrases.CONFLICT, status = StatusCodes.CONFLICT) {
-		super(message, status);
+	constructor(message = ReasonPhrases.CONFLICT, statusCode = StatusCodes.CONFLICT) {
+		super(message, statusCode);
+	}
+}
+
+class NotFoundRequestError extends ErrorResponse {
+	constructor(message = ReasonPhrases.NOT_FOUND, statusCode = StatusCodes.NOT_FOUND) {
+		super(message, statusCode);
+	}
+}
+
+class InterServerRequestError extends ErrorResponse {
+	constructor(message = ReasonPhrases.INTERNAL_SERVER_ERROR, statusCode = StatusCodes.INTERNAL_SERVER_ERROR) {
+		super(message, statusCode);
 	}
 }
 
 module.exports = {
 	ErrorResponse,
+	NotFoundRequestError,
 	ConflictRequestError,
 	BadRequestError,
 	ForbiddenRequestError,
+	InterServerRequestError,
 };

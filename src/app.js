@@ -4,6 +4,8 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
+const createHttpError = require('http-errors');
+const { handlerErrors, notFound } = require('./middleware');
 
 const app = express();
 
@@ -21,5 +23,8 @@ require('@/dbs').mongodInit;
 app.use('/v1/api', require('./routes'));
 
 // handling errors
+app.use('*', notFound);
+
+app.use(handlerErrors);
 
 module.exports = app;
