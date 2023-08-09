@@ -38,6 +38,12 @@ class InterServerRequestError extends ErrorResponse {
 	}
 }
 
+class UnauthorizedRequestError extends ErrorResponse {
+	constructor(message = ReasonPhrases.UNAUTHORIZED, statusCode = StatusCodes.UNAUTHORIZED) {
+		super(message, statusCode);
+	}
+}
+
 module.exports = {
 	ErrorResponse,
 	NotFoundRequestError,
@@ -45,4 +51,5 @@ module.exports = {
 	BadRequestError,
 	ForbiddenRequestError,
 	InterServerRequestError,
+	UnauthorizedRequestError,
 };

@@ -2,8 +2,7 @@
 
 const { shopModel } = require('@/models');
 const bcrypt = require('bcrypt');
-const { RoleShop } = require('@/constant');
-const crypto = require('node:crypto');
+const { ROLE_SHOP } = require('@/constant');
 const KeyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('@/auth/auth.utils');
 const { getInfoData, generateToken } = require('@/utils');
@@ -24,7 +23,7 @@ class AccessService {
 			name,
 			email,
 			password: passwordHash,
-			roles: [RoleShop.SHOP],
+			roles: [ROLE_SHOP.SHOP],
 		});
 
 		if (!newShop) {

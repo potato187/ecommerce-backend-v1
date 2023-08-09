@@ -1,10 +1,4 @@
-const RoleShop = {
-	SHOP: 'SHOP',
-	WRITE: 'WRITE',
-	EDITOR: 'EDITOR',
-	ADMIN: 'ADMIN',
-};
-
 module.exports = {
-	RoleShop,
+	...require('./shop.constant'),
+	...require('./header.constant'),
 };
