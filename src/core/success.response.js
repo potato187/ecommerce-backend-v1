@@ -26,6 +26,7 @@ class CreatedResponse extends SuccessResponse {
 }
 
 module.exports = {
+	SuccessResponse,
 	OkResponse,
 	CreatedResponse,
 };

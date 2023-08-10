@@ -1,7 +1,8 @@
 'use strict';
 const { HEADER } = require('@/constant');
-const { UnauthorizedRequestError, ForbiddenRequestError } = require('@/core');
-const { ApiKeyService } = require('@/services');
+const { UnauthorizedRequestError, ForbiddenRequestError, NotFoundRequestError } = require('@/core');
+const { ApiKeyService, KeyTokenService } = require('@/services');
+const JWT = require('jsonwebtoken');
 
 const apiKeyValidator = async (req, res, next) => {
 	const key = req.headers[HEADER.API_KEY]?.toString();
@@ -29,7 +30,35 @@ const permissionValidator = (permission) => {
 	};
 };
 
+const authentication = async (res, req, next) => {
+	const clientId = res.headers[HEADER.CLIENT_ID];
+	const accessToken = res.headers[HEADER.AUTHORIZATION];
+
+	if (!clientId || !accessToken) {
+		next(new UnauthorizedRequestError('Invalid Request'));
+	}
+
+	const keyStore = await KeyTokenService.findByUserId(clientId);
+	if (!keyStore) {
+		next(new NotFoundRequestError('Not Found keyStore'));
+	}
+
+	try {
+		const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
+		if (decodeUser.userId !== clientId) {
+			return next(new UnauthorizedRequestError('Invalid User'));
+		}
+
+		req.keyStore = keyStore;
+	} catch (error) {
+		next(error);
+	}
+
+	next();
+};
+
 module.exports = {
 	apiKeyValidator,
 	permissionValidator,
+	authentication,
 };
