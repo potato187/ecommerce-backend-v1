@@ -30,15 +30,16 @@ const permissionValidator = (permission) => {
 	};
 };
 
-const authentication = async (res, req, next) => {
-	const clientId = res.headers[HEADER.CLIENT_ID];
-	const accessToken = res.headers[HEADER.AUTHORIZATION];
+const authentication = async (req, res, next) => {
+	const clientId = req.headers[HEADER.CLIENT_ID];
+	const accessToken = req.headers[HEADER.AUTHORIZATION];
 
 	if (!clientId || !accessToken) {
 		next(new UnauthorizedRequestError('Invalid Request'));
 	}
 
 	const keyStore = await KeyTokenService.findByUserId(clientId);
+
 	if (!keyStore) {
 		next(new NotFoundRequestError('Not Found keyStore'));
 	}
@@ -53,8 +54,7 @@ const authentication = async (res, req, next) => {
 	} catch (error) {
 		next(error);
 	}
-
-	next();
+	return next();
 };
 
 module.exports = {

@@ -12,4 +12,6 @@ router.post('/login', tryCatch(AccessController.login));
 
 router.use(tryCatch(authMiddleware.authentication));
 
+router.post('/logout', tryCatch(AccessController.logout));
+
 module.exports = router;

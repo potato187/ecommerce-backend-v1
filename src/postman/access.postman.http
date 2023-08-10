@@ -20,3 +20,10 @@ Content-Type: application/json
   "email" : "shop01@gmail.com",
   "password": "abc123"
 }
+
+###
+POST {{url_dev}}shop/logout
+x-client-id: 64d466138f9309701bf154ba
+x-api-key: {{apiKey}}
+Content-Type: application/json
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGQ0NjYxMzhmOTMwOTcwMWJmMTU0YmEiLCJlbWFpbCI6InNob3AwMUBnbWFpbC5jb20iLCJpYXQiOjE2OTE2NjM4ODAsImV4cCI6MTY5MTgzNjY4MH0.-TuZume3d1Ij3BZygcykCHjEPDR92p7XiFVqJLcUpuI
