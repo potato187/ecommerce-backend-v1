@@ -18,9 +18,14 @@ class AccessController {
 	};
 
 	logout = async (req, res, next) => {
-		console.log(req.keyStore._id);
 		new SuccessResponse({
 			metadata: await AccessService.logout(req.keyStore),
+		}).send(res);
+	};
+
+	handleRefreshToken = async (req, res, next) => {
+		new SuccessResponse({
+			metadata: await AccessService.handleRefreshToken(req),
 		}).send(res);
 	};
 }

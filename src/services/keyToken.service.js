@@ -5,7 +5,7 @@ const { Types } = require('mongoose');
 
 class KeyTokenService {
 	static createKeyToken = async ({ userId, publicKey, privateKey, refreshToken }) => {
-		const filter = { user: userId };
+		const filter = { user: new Types.ObjectId(userId) };
 		const update = { publicKey, privateKey, refreshToken, refreshTokenUsed: [] };
 		const option = { upsert: true, new: true };
 
@@ -20,6 +20,24 @@ class KeyTokenService {
 
 	static removeKeyById = async (id) => {
 		return await keyTokenModel.deleteOne({ _id: id });
+	};
+
+	static findByRefreshTokenUsed = async (refreshToken) => {
+		return await keyTokenModel.findOne({ refreshTokenUsed: refreshToken });
+	};
+
+	static markRefreshTokenUsed = async (id, refreshToken, markRefreshToken) => {
+		return await keyTokenModel.updateOne(
+			{ _id: new Types.ObjectId(id) },
+			{
+				$set: {
+					refreshToken,
+				},
+				$addToSet: {
+					refreshTokenUsed: markRefreshToken,
+				},
+			},
+		);
 	};
 }
 

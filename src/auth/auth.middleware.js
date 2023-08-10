@@ -2,18 +2,18 @@
 const { HEADER } = require('@/constant');
 const { UnauthorizedRequestError, ForbiddenRequestError, NotFoundRequestError } = require('@/core');
 const { ApiKeyService, KeyTokenService } = require('@/services');
-const JWT = require('jsonwebtoken');
+const { verifyToken } = require('./auth.utils');
 
 const apiKeyValidator = async (req, res, next) => {
 	const key = req.headers[HEADER.API_KEY]?.toString();
 	if (!key) {
-		next(new UnauthorizedRequestError('API key missing in headers'));
+		return next(new UnauthorizedRequestError('API key missing in headers'));
 	}
 
 	const objKey = await ApiKeyService.getById(key);
 
 	if (!objKey) {
-		next(new UnauthorizedRequestError('API key missing in headers'));
+		return next(new UnauthorizedRequestError('API key missing in headers'));
 	}
 
 	req.objKey = objKey;
@@ -32,28 +32,37 @@ const permissionValidator = (permission) => {
 
 const authentication = async (req, res, next) => {
 	const clientId = req.headers[HEADER.CLIENT_ID];
-	const accessToken = req.headers[HEADER.AUTHORIZATION];
-
-	if (!clientId || !accessToken) {
-		next(new UnauthorizedRequestError('Invalid Request'));
+	if (!clientId) {
+		return next(new UnauthorizedRequestError('Invalid Request'));
 	}
 
 	const keyStore = await KeyTokenService.findByUserId(clientId);
 
 	if (!keyStore) {
-		next(new NotFoundRequestError('Not Found keyStore'));
+		return next(new NotFoundRequestError('Not Found keyStore'));
 	}
 
-	try {
-		const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
-		if (decodeUser.userId !== clientId) {
-			return next(new UnauthorizedRequestError('Invalid User'));
+	const refreshToken = req.headers[HEADER.REFRESH_TOKEN];
+	if (refreshToken) {
+		const { userId, email } = await verifyToken(refreshToken, keyStore.privateKey);
+		if (decodeRefreshToken.userId !== clientId) {
+			return next(new UnauthorizedRequestError('Invalid Request'));
 		}
 
+		req.user = { userId, email };
+		req.refreshToken = refreshToken;
 		req.keyStore = keyStore;
-	} catch (error) {
-		next(error);
+		return next();
 	}
+
+	const accessToken = req.headers[HEADER.AUTHORIZATION];
+	const { userId, email } = await verifyToken(accessToken, keyStore.publicKey);
+	if (userId !== clientId) {
+		return next(new UnauthorizedRequestError('Invalid User'));
+	}
+	req.user = { userId, email };
+	req.keyStore = keyStore;
+
 	return next();
 };
 

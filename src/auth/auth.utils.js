@@ -13,6 +13,12 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
 	return { accessToken, refreshToken };
 };
 
+const verifyToken = async (token, secretKey) => {
+	const decode = await JWT.verify(token, secretKey);
+	return decode;
+};
+
 module.exports = {
 	createTokenPair,
+	verifyToken,
 };

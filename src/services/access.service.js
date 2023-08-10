@@ -1,12 +1,18 @@
 'use strict';
 
-const { shopModel } = require('@/models');
+const { shopModel, keyTokenModel } = require('@/models');
 const bcrypt = require('bcrypt');
 const { ROLE_SHOP } = require('@/constant');
 const KeyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('@/auth/auth.utils');
 const { getInfoData, generateToken } = require('@/utils');
-const { UnauthorizedRequestError, ConflictRequestError, InterServerRequestError, BadRequestError } = require('@/core');
+const {
+	UnauthorizedRequestError,
+	ConflictRequestError,
+	InterServerRequestError,
+	BadRequestError,
+	ForbiddenRequestError,
+} = require('@/core');
 const ShopService = require('./shop.service');
 
 const SALT_ROUNDS = 10;
@@ -81,6 +87,29 @@ class AccessService {
 
 	static logout = async (keyStore) => {
 		return await KeyTokenService.removeKeyById(keyStore._id);
+	};
+
+	static handleRefreshToken = async ({ keyStore, user, body }) => {
+		const { refreshToken } = body;
+
+		if (keyStore.refreshTokenUsed.includes(refreshToken)) {
+			await KeyTokenService.removeKeyById(keyStore._id);
+			throw new ForbiddenRequestError('Something is wrong, pls login again');
+		}
+
+		if (keyStore.refreshToken !== refreshToken) {
+			throw new UnauthorizedRequestError('Shop not registered!');
+		}
+
+		const [publicKey, privateKey] = [generateToken(), generateToken()];
+		const tokens = await createTokenPair(user, publicKey, privateKey);
+
+		await KeyTokenService.markRefreshTokenUsed(keyStore._id, tokens.refreshToken, refreshToken);
+
+		return {
+			user,
+			tokens,
+		};
 	};
 }
 
