@@ -6,7 +6,8 @@ const { ROLE_SHOP } = require('@/constant');
 const KeyTokenService = require('./keyToken.service');
 const { createTokenPair } = require('@/auth/auth.utils');
 const { getInfoData, generateToken } = require('@/utils');
-const { ConflictRequestError, InterServerRequestError } = require('@/core');
+const { UnauthorizedRequestError, ConflictRequestError, InterServerRequestError, BadRequestError } = require('@/core');
+const ShopService = require('./shop.service');
 
 const SALT_ROUNDS = 10;
 
@@ -50,6 +51,31 @@ class AccessService {
 				shop: getInfoData({ fields: ['_id', 'name', 'email'], object: newShop }),
 				tokens,
 			},
+		};
+	};
+
+	static login = async ({ email, password, refreshToken = null }) => {
+		const foundShop = await ShopService.findByEmail({ email });
+
+		if (!foundShop) {
+			throw new BadRequestError('Shop not registered!');
+		}
+
+		const { password: hashPassword, _id: userId } = foundShop;
+
+		const match = bcrypt.compare(password, hashPassword);
+		if (!match) {
+			throw new UnauthorizedRequestError();
+		}
+
+		const [privateKey, publicKey] = [generateToken(), generateToken()];
+		const tokens = await createTokenPair({ userId, email }, publicKey, privateKey);
+
+		await KeyTokenService.createKeyToken({ userId, publicKey, privateKey, refreshToken: tokens.refreshToken });
+
+		return {
+			shop: getInfoData({ fields: ['_id', 'name', 'email'], object: foundShop }),
+			tokens,
 		};
 	};
 }
