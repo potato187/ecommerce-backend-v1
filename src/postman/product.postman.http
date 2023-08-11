@@ -34,7 +34,7 @@ Content-Type: application/json
 
 {
   "product_type": "electronic",
-  "product_name": "Iphone 14",
+  "product_name": "Iphone 15",
   "product_description": "New product",
   "product_thumb": "product-thumb",
   "product_price": 50,

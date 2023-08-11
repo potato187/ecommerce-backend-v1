@@ -1,6 +1,7 @@
 'use strict';
 
 const { Schema, model } = require('mongoose');
+const { default: slugify } = require('slugify');
 
 const COLLECTION_NAME = 'Products';
 const DOCUMENT_NAME = 'Product';
@@ -14,6 +15,9 @@ const productSchema = new Schema(
 		product_name: {
 			type: String,
 			require: true,
+		},
+		product_slug: {
+			type: String,
 		},
 		product_thumb: {
 			type: String,
@@ -33,11 +37,33 @@ const productSchema = new Schema(
 		product_type: {
 			type: String,
 			require: true,
-			enum: ['Electronic', 'Clothing'],
+			enum: ['Electronic', 'Clothing', 'Furniture'],
 		},
 		product_attributes: {
 			type: Schema.Types.Mixed,
 			required: true,
+		},
+		product_ratingAverage: {
+			type: Number,
+			default: 4.5,
+			min: [1, 'Rating must be above 1.0'],
+			max: [5, 'Rating must be below 5.0'],
+		},
+		product_variations: {
+			type: Array,
+			default: [],
+		},
+		isDraft: {
+			type: Boolean,
+			default: true,
+			select: false,
+			index: true,
+		},
+		isPublished: {
+			type: Boolean,
+			default: false,
+			select: false,
+			index: true,
 		},
 	},
 	{
@@ -46,44 +72,9 @@ const productSchema = new Schema(
 	},
 );
 
-const clothingSchema = new Schema(
-	{
-		product_shop: {
-			type: Schema.Types.ObjectId,
-			ref: 'Shop',
-		},
-		brand: {
-			type: String,
-			require: true,
-		},
-		size: {
-			type: String,
-		},
-		material: {
-			type: String,
-		},
-	},
-	{ timestamps: true, collection: 'Clothings' },
-);
-
-const electronicSchema = new Schema(
-	{
-		product_shop: {
-			type: Schema.Types.ObjectId,
-			ref: 'Shop',
-		},
-		manufacturer: {
-			type: String,
-			require: true,
-		},
-		model: {
-			type: String,
-		},
-		color: {
-			type: String,
-		},
-	},
-	{ timestamps: true, collection: 'Electronics' },
-);
+productSchema.pre('save', function (next) {
+	this.product_slug = slugify(this.product_name, { lower: true });
+	next();
+});
 
 module.exports = model(DOCUMENT_NAME, productSchema);
