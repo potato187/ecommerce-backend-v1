@@ -9,5 +9,6 @@ const router = express.Router();
 router.use(apiKeyValidator);
 router.use(permissionValidator('0000'));
 router.use('/shop', require('./access'));
+router.use('/product', require('./product'));
 
 module.exports = router;

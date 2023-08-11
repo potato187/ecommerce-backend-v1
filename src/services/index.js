@@ -3,4 +3,5 @@ module.exports = {
 	KeyTokenService: require('./keyToken.service'),
 	ApiKeyService: require('./apiKey.service'),
 	ShopService: require('./shop.service'),
+	ProductService: require('./product.service'),
 };

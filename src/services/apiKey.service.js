@@ -1,9 +1,9 @@
 'use strict';
-const { apiKeyModel } = require('@/models');
+const { ApiKeyModel } = require('@/models');
 
 class ApiKeyService {
 	static getById = async (key) => {
-		const objKey = await apiKeyModel.findOne({ key, status: true }).lean();
+		const objKey = await ApiKeyModel.findOne({ key, status: true }).lean();
 		return objKey;
 	};
 }

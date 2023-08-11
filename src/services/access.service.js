@@ -1,6 +1,6 @@
 'use strict';
 
-const { shopModel, keyTokenModel } = require('@/models');
+const { ShopModel, KeyTokenModel } = require('@/models');
 const bcrypt = require('bcrypt');
 const { ROLE_SHOP } = require('@/constant');
 const KeyTokenService = require('./keyToken.service');
@@ -19,14 +19,14 @@ const SALT_ROUNDS = 10;
 
 class AccessService {
 	static signUp = async ({ name, email, password }) => {
-		const holderShop = await shopModel.findOne({ email }).lean();
+		const holderShop = await ShopModel.findOne({ email }).lean();
 
 		if (holderShop) {
 			throw new ConflictRequestError(`Error:: The shop has been registered. `);
 		}
 
 		const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-		const newShop = await shopModel.create({
+		const newShop = await ShopModel.create({
 			name,
 			email,
 			password: passwordHash,
