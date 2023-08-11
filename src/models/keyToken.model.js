@@ -2,7 +2,7 @@
 const { Schema, model } = require('mongoose');
 
 const DOCUMENT_NAME = 'KeyToken';
-const COLLECTION_NAME = 'keyTokens';
+const COLLECTION_NAME = 'KeyTokens';
 
 var keyTokenSchema = new Schema(
 	{

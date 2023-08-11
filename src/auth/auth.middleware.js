@@ -1,7 +1,7 @@
 'use strict';
 const { HEADER } = require('@/constant');
 const { UnauthorizedRequestError, ForbiddenRequestError, NotFoundRequestError } = require('@/core');
-const { ApiKeyService, KeyTokenService } = require('@/services');
+const { ApiKeyService, KeyTokenService, ShopService } = require('@/services');
 const { verifyToken } = require('./auth.utils');
 
 const apiKeyValidator = async (req, res, next) => {

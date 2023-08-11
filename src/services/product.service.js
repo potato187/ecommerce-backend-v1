@@ -2,6 +2,7 @@
 const { BadRequestError, ForbiddenRequestError } = require('@/core');
 const { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } = require('@/models');
 const { Types } = require('mongoose');
+const { findAllDraftsFromShop } = require('./repository/product.repo');
 
 class ProductFactory {
 	static productRegistry = {};
@@ -16,6 +17,11 @@ class ProductFactory {
 		}
 
 		return new ProductClass(payload).createProduct();
+	}
+
+	static async findAllDraftsFromShop({ product_shop, skip, limit }) {
+		const query = { product_shop: new Types.ObjectId(product_shop), isDraft: true };
+		return await findAllDraftsFromShop({ query, skip, limit });
 	}
 }
 

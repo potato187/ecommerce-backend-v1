@@ -1,6 +1,5 @@
 'use strict';
-
-const { ShopModel, KeyTokenModel } = require('@/models');
+const { ShopModel } = require('@/models');
 const bcrypt = require('bcrypt');
 const { ROLE_SHOP } = require('@/constant');
 const KeyTokenService = require('./keyToken.service');
