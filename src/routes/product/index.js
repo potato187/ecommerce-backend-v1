@@ -6,9 +6,16 @@ const { ProductController } = require('@/controllers');
 const { authMiddleware } = auth;
 
 const router = express.Router();
+router.get('/search/:keySearch', tryCatch(ProductController.searchProductByUser));
 
 router.use(tryCatch(authMiddleware.authentication));
-router.get('/drafts/all', tryCatch(ProductController.getAllDraftsFromShop));
+
+router.get('/draft/all', tryCatch(ProductController.getAllDraftsFromShop));
+router.get('/publish/all', tryCatch(ProductController.getAllPublishesFromShop));
+
 router.post('/create', tryCatch(ProductController.createProduct));
+
+router.post('/draft/:id', tryCatch(ProductController.setDraftProductFromShop));
+router.post('/publish/:id', tryCatch(ProductController.setPublishProductFromShop));
 
 module.exports = router;

@@ -2,7 +2,13 @@
 const { BadRequestError, ForbiddenRequestError } = require('@/core');
 const { ProductModel, ClothingModel, ElectronicModel, FurnitureModel } = require('@/models');
 const { Types } = require('mongoose');
-const { findAllDraftsFromShop } = require('./repository/product.repo');
+const {
+	findAllDraftProducts,
+	findAllPublishedProducts,
+	setProductIsPublished,
+	setProductIsDraft,
+	searchProductByUser,
+} = require('./repository/product.repo');
 
 class ProductFactory {
 	static productRegistry = {};
@@ -21,7 +27,25 @@ class ProductFactory {
 
 	static async findAllDraftsFromShop({ product_shop, skip, limit }) {
 		const query = { product_shop: new Types.ObjectId(product_shop), isDraft: true };
-		return await findAllDraftsFromShop({ query, skip, limit });
+		return await findAllDraftProducts({ query, skip, limit });
+	}
+
+	static async findAllPublishesFromShop({ product_shop, skip, limit }) {
+		const query = { product_shop: new Types.ObjectId(product_shop), isPublished: true };
+		return await findAllPublishedProducts({ query, skip, limit });
+	}
+
+	static async setDraftProductFromShop({ product_shop, product_id }) {
+		return await setProductIsDraft({ product_shop, product_id });
+	}
+
+	static async setPublishProductFromShop({ product_shop, product_id }) {
+		console.log('is here');
+		return await setProductIsPublished({ product_shop, product_id });
+	}
+
+	static async searchProductByUser({ keySearch }) {
+		return await searchProductByUser({ keySearch });
 	}
 }
 

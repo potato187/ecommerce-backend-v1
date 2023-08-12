@@ -67,8 +67,21 @@ Content-Type: application/json
 }
 
 ###
-GET {{url_dev}}product/drafts/all
+GET {{url_dev}}product/draft/all
 x-api-key: {{apiKey}}
 x-client-id: {{clientId}}
 authorization: {{authorization}}
-Content-Type: application/json
+
+
+###
+GET {{url_dev}}product/publish/all
+x-api-key: {{apiKey}}
+x-client-id: {{clientId}}
+authorization: {{authorization}}
+
+
+###
+POST {{url_dev}}product/publish/64d6703366dedf4254487e37
+x-api-key: {{apiKey}}
+x-client-id: {{clientId}}
+authorization: {{authorization}}
