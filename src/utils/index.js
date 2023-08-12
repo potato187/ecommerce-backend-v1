@@ -14,8 +14,13 @@ const getSelectData = (select = []) => {
 	return Object.fromEntries(select.map((key) => [key, 1]));
 };
 
+const getUnSelectData = (select = []) => {
+	return Object.fromEntries(select.map((key) => [key, 0]));
+};
+
 module.exports = {
 	getInfoData,
 	generateToken,
 	getSelectData,
+	getUnSelectData,
 };

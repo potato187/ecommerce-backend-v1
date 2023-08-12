@@ -8,6 +8,7 @@ const { authMiddleware } = auth;
 const router = express.Router();
 
 router.get('/search/:keySearch', tryCatch(ProductController.searchProductByUser));
+router.get('/:id', tryCatch(ProductController.getProductById));
 router.get('', tryCatch(ProductController.getAllProduct));
 
 router.use(tryCatch(authMiddleware.authentication));

@@ -32,6 +32,13 @@ class ProductController {
 		}).send(res);
 	};
 
+	getProductById = async (req, res, next) => {
+		new SuccessResponse({
+			message: 'Get detail product successful!',
+			metadata: await ProductService.getProductById({ product_id: req.params.id }),
+		}).send(res);
+	};
+
 	setDraftProductFromShop = async (req, res, next) => {
 		new SuccessResponse({
 			message: 'Set product as draft successful!',

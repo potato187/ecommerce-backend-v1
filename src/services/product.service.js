@@ -9,6 +9,7 @@ const {
 	setProductIsDraft,
 	searchProductByUser,
 	findAllProduct,
+	getProductById,
 } = require('./repository/product.repo');
 
 class ProductFactory {
@@ -26,14 +27,24 @@ class ProductFactory {
 		return new ProductClass(payload).createProduct();
 	}
 
-	static async findAllDraftsFromShop({ product_shop, skip, limit }) {
+	static async findAllDraftsFromShop({ product_shop, skip = 0, limit = 50 }) {
 		const query = { product_shop: new Types.ObjectId(product_shop), isDraft: true };
 		return await findAllDraftProducts({ query, skip, limit });
 	}
 
-	static async findAllPublishesFromShop({ product_shop, skip, limit }) {
+	static async findAllPublishesFromShop({ product_shop, skip = 0, limit = 50 }) {
 		const query = { product_shop: new Types.ObjectId(product_shop), isPublished: true };
 		return await findAllPublishedProducts({ query, skip, limit });
+	}
+
+	static async findAllProduct({ filter = { isPublished: true }, sort = 'ctime', page = 1, limit = 50 }) {
+		return await findAllProduct({
+			filter,
+			sort,
+			page,
+			limit,
+			select: ['product_name', 'product_price', 'product_thumb'],
+		});
 	}
 
 	static async setDraftProductFromShop({ product_shop, product_id }) {
@@ -41,7 +52,6 @@ class ProductFactory {
 	}
 
 	static async setPublishProductFromShop({ product_shop, product_id }) {
-		console.log('is here');
 		return await setProductIsPublished({ product_shop, product_id });
 	}
 
@@ -49,8 +59,8 @@ class ProductFactory {
 		return await searchProductByUser({ keySearch });
 	}
 
-	static async findAllProduct({ filter = { isPublished: true }, sort = 'ctime', page = 1 }) {
-		return await findAllProduct({ filter, sort, page, select: ['product_name', 'product_price', 'product_thumb'] });
+	static async getProductById({ product_id }) {
+		return await getProductById({ product_id, unSelect: ['__v', 'createdAt', 'updatedAt'] });
 	}
 }
 
