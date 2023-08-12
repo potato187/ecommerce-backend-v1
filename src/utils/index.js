@@ -10,7 +10,12 @@ const generateToken = (length = 64, format = 'hex') => {
 	return crypto.randomBytes(length).toString(format);
 };
 
+const getSelectData = (select = []) => {
+	return Object.fromEntries(select.map((key) => [key, 1]));
+};
+
 module.exports = {
 	getInfoData,
 	generateToken,
+	getSelectData,
 };

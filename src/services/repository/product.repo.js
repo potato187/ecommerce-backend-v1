@@ -1,5 +1,6 @@
 'use strict';
 const { ProductModel } = require('@/models');
+const { getSelectData } = require('@/utils');
 const { Types } = require('mongoose');
 
 const queryProduct = async ({ query, limit, skip }) => {
@@ -18,6 +19,12 @@ const findAllDraftProducts = async ({ query, skip = 0, limit = 50 }) => {
 
 const findAllPublishedProducts = async ({ query, skip = 0, limit = 50 }) => {
 	return await queryProduct({ query, skip, limit });
+};
+
+const findAllProduct = async ({ filter, sort, select, limit, page = 1 }) => {
+	const skip = (page - 1) * limit;
+	const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 };
+	return await ProductModel.find(filter).sort(sortBy).skip(skip).limit(limit).select(getSelectData(select)).lean();
 };
 
 const setProductIsPublished = async ({ product_shop, product_id }) => {
@@ -68,6 +75,7 @@ const searchProductByUser = async ({ keySearch }) => {
 module.exports = {
 	findAllDraftProducts,
 	findAllPublishedProducts,
+	findAllProduct,
 	setProductIsPublished,
 	setProductIsDraft,
 	searchProductByUser,

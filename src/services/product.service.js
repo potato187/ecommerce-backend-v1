@@ -8,6 +8,7 @@ const {
 	setProductIsPublished,
 	setProductIsDraft,
 	searchProductByUser,
+	findAllProduct,
 } = require('./repository/product.repo');
 
 class ProductFactory {
@@ -46,6 +47,10 @@ class ProductFactory {
 
 	static async searchProductByUser({ keySearch }) {
 		return await searchProductByUser({ keySearch });
+	}
+
+	static async findAllProduct({ filter = { isPublished: true }, sort = 'ctime', page = 1 }) {
+		return await findAllProduct({ filter, sort, page, select: ['product_name', 'product_price', 'product_thumb'] });
 	}
 }
 

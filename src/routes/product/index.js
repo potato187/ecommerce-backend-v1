@@ -6,7 +6,9 @@ const { ProductController } = require('@/controllers');
 const { authMiddleware } = auth;
 
 const router = express.Router();
+
 router.get('/search/:keySearch', tryCatch(ProductController.searchProductByUser));
+router.get('', tryCatch(ProductController.getAllProduct));
 
 router.use(tryCatch(authMiddleware.authentication));
 
