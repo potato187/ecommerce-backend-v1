@@ -121,9 +121,13 @@ class Clothing extends Product {
 	}
 
 	async updateProductById(productId) {
-		const updateBody = removeFalsyProperties()(flattenObject(this));
-		if (this.product_attributes) {
-			await updateProductById({ productId, updateBody: this.product_attributes, model: ClothingModel });
+		const updateBody = removeFalsyProperties()(this);
+		if (updateBody.product_attributes) {
+			await updateProductById({
+				productId,
+				updateBody: updateBody.product_attributes,
+				model: ClothingModel,
+			});
 		}
 		return await super.updateProductById(productId, updateBody);
 	}
@@ -145,11 +149,15 @@ class Electronic extends Product {
 	}
 
 	async updateProductById(productId) {
-		const updateBody = removeFalsyProperties()(flattenObject(this));
-		if (this.product_attributes) {
-			await updateProductById({ productId, updateBody: this.product_attributes, model: ElectronicModel });
+		const updateBody = removeFalsyProperties()(this);
+		if (updateBody.product_attributes) {
+			await updateProductById({
+				productId,
+				updateBody: updateBody.product_attributes,
+				model: ElectronicModel,
+			});
 		}
-		return await super.updateProductById(productId, updateBody);
+		return await super.updateProductById(productId, flattenObject(updateBody));
 	}
 }
 
@@ -169,9 +177,13 @@ class Furniture extends Product {
 	}
 
 	async updateProductById(productId) {
-		const updateBody = removeFalsyProperties()(flattenObject(this));
-		if (this.product_attributes) {
-			await updateProductById({ productId, updateBody: this.product_attributes, model: FurnitureModel });
+		const updateBody = removeFalsyProperties()(this);
+		if (updateBody.product_attributes) {
+			await updateProductById({
+				productId,
+				updateBody: updateBody.product_attributes,
+				model: FurnitureModel,
+			});
 		}
 		return await super.updateProductById(productId, updateBody);
 	}
