@@ -11,7 +11,7 @@ const {
 	findAllProduct,
 	getProductById,
 	updateProductById,
-} = require('./repository/product.repo');
+} = require('@/models/repository/product.repo');
 const { removeFalsyProperties, flattenObject } = require('@/utils');
 
 class ProductFactory {
