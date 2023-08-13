@@ -13,6 +13,7 @@ const {
 	updateProductById,
 } = require('@/models/repository/product.repo');
 const { removeFalsyProperties, flattenObject } = require('@/utils');
+const { insertInventory } = require('@/models/repository/inventory.repo');
 
 class ProductFactory {
 	static productRegistry = {};
@@ -97,7 +98,13 @@ class Product {
 	}
 
 	async createProduct(productId) {
-		return await ProductModel.create({ _id: new Types.ObjectId(productId), ...this });
+		const newProduct = await ProductModel.create({ _id: new Types.ObjectId(productId), ...this });
+		await insertInventory({
+			productId: newProduct._id,
+			shopId: newProduct.product_shop,
+			stock: newProduct.product_quantity,
+		});
+		return newProduct;
 	}
 
 	async updateProductById(productId, updateBody) {

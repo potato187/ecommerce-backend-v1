@@ -6,4 +6,5 @@ module.exports = {
 	ClothingModel: require('./clothing.model'),
 	ElectronicModel: require('./electronic.model'),
 	FurnitureModel: require('./furniture.model'),
+	InventoryModel: require('./inventory.model'),
 };
