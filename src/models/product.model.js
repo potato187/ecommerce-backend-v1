@@ -1,10 +1,8 @@
 'use strict';
-
 const { Schema, model } = require('mongoose');
 const { default: slugify } = require('slugify');
-
-const COLLECTION_NAME = 'Products';
 const DOCUMENT_NAME = 'Product';
+const COLLECTION_NAME = 'Products';
 
 const productSchema = new Schema(
 	{
@@ -37,7 +35,7 @@ const productSchema = new Schema(
 		product_type: {
 			type: String,
 			require: true,
-			enum: ['Electronic', 'Clothing', 'Furniture'],
+			enum: ['electronic', 'clothing', 'furniture'],
 		},
 		product_attributes: {
 			type: Schema.Types.Mixed,

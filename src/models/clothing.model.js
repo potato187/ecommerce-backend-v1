@@ -2,8 +2,8 @@
 
 const { Schema, model } = require('mongoose');
 
-const COLLECTION_NAME = 'Clothings';
 const DOCUMENT_NAME = 'Clothing';
+const COLLECTION_NAME = 'Clothings';
 
 const clothingSchema = new Schema(
 	{
