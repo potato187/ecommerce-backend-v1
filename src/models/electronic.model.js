@@ -2,7 +2,7 @@
 const { Schema, model } = require('mongoose');
 
 const DOCUMENT_NAME = 'Electronic';
-const COLLECTION_NAME = 'Electronic';
+const COLLECTION_NAME = 'Electronics';
 
 const electronicSchema = new Schema(
 	{

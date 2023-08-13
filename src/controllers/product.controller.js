@@ -35,7 +35,7 @@ class ProductController {
 	getProductById = async (req, res, next) => {
 		new SuccessResponse({
 			message: 'Get detail product successful!',
-			metadata: await ProductService.getProductById({ product_id: req.params.id }),
+			metadata: await ProductService.getProductById({ productId: req.params.id }),
 		}).send(res);
 	};
 
@@ -44,7 +44,7 @@ class ProductController {
 			message: 'Set product as draft successful!',
 			metadata: await ProductService.setDraftProductFromShop({
 				product_shop: req.user.userId,
-				product_id: req.params.id,
+				productId: req.params.id,
 			}),
 		}).send(res);
 	};
@@ -54,7 +54,7 @@ class ProductController {
 			message: 'Set product as published successful!',
 			metadata: await ProductService.setPublishProductFromShop({
 				product_shop: req.user.userId,
-				product_id: req.params.id,
+				productId: req.params.id,
 			}),
 		}).send(res);
 	};
@@ -63,6 +63,15 @@ class ProductController {
 		new SuccessResponse({
 			message: 'Search product successful!',
 			metadata: await ProductService.searchProductByUser(req.params),
+		}).send(res);
+	};
+
+	updateProductById = async (req, res, next) => {
+		const { product_type, ...payload } = req.body;
+		const productId = req.params.id;
+		new SuccessResponse({
+			message: 'Update product successful!',
+			metadata: await ProductService.updateProductById({ type: product_type, productId, payload }),
 		}).send(res);
 	};
 }

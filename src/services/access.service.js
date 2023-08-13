@@ -14,8 +14,6 @@ const {
 } = require('@/core');
 const ShopService = require('./shop.service');
 
-const SALT_ROUNDS = 10;
-
 class AccessService {
 	static signUp = async ({ name, email, password }) => {
 		const holderShop = await ShopModel.findOne({ email }).lean();
@@ -24,11 +22,10 @@ class AccessService {
 			throw new ConflictRequestError(`Error:: The shop has been registered. `);
 		}
 
-		const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 		const newShop = await ShopModel.create({
 			name,
 			email,
-			password: passwordHash,
+			password,
 			roles: [ROLE_SHOP.SHOP],
 		});
 

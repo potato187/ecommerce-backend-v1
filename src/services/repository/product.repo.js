@@ -27,9 +27,9 @@ const findAllProduct = async ({ filter, sort, select, limit, page = 1 }) => {
 	return await ProductModel.find(filter).sort(sortBy).skip(skip).limit(limit).select(getSelectData(select)).lean();
 };
 
-const setProductIsPublished = async ({ product_shop, product_id }) => {
+const setProductIsPublished = async ({ product_shop, productId }) => {
 	const foundProduct = await ProductModel.findOne({
-		_id: new Types.ObjectId(product_id),
+		_id: new Types.ObjectId(productId),
 		product_shop: new Types.ObjectId(product_shop),
 	});
 	if (!foundProduct) return null;
@@ -42,9 +42,9 @@ const setProductIsPublished = async ({ product_shop, product_id }) => {
 	return modifiedCount;
 };
 
-const setProductIsDraft = async ({ product_shop, product_id }) => {
+const setProductIsDraft = async ({ product_shop, productId }) => {
 	const foundProduct = await ProductModel.findOne({
-		_id: new Types.ObjectId(product_id),
+		_id: new Types.ObjectId(productId),
 		product_shop: new Types.ObjectId(product_shop),
 	});
 	if (!foundProduct) return null;
@@ -72,9 +72,12 @@ const searchProductByUser = async ({ keySearch }) => {
 		.lean();
 };
 
-const getProductById = async ({ product_id, unSelect }) => {
-	console.log('product_id::', product_id);
-	return await ProductModel.findById(new Types.ObjectId(product_id)).select(getUnSelectData(unSelect)).lean();
+const getProductById = async ({ productId, unSelect }) => {
+	return await ProductModel.findById(new Types.ObjectId(productId)).select(getUnSelectData(unSelect)).lean();
+};
+
+const updateProductById = async ({ productId, updateBody, model, isNew = true }) => {
+	return await model.findByIdAndUpdate(new Types.ObjectId(productId), updateBody, { new: isNew });
 };
 
 module.exports = {
@@ -85,4 +88,5 @@ module.exports = {
 	setProductIsDraft,
 	searchProductByUser,
 	getProductById,
+	updateProductById,
 };

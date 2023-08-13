@@ -21,4 +21,6 @@ router.post('/create', tryCatch(ProductController.createProduct));
 router.post('/draft/:id', tryCatch(ProductController.setDraftProductFromShop));
 router.post('/publish/:id', tryCatch(ProductController.setPublishProductFromShop));
 
+router.patch('/update/:id', tryCatch(ProductController.updateProductById));
+
 module.exports = router;
