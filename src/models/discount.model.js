@@ -31,11 +31,11 @@ const discountSchema = new Schema(
 			type: String,
 			require: true,
 		},
-		discount_startDate: {
+		discount_start_date: {
 			type: Date,
 			require: true,
 		},
-		discount_endDate: {
+		discount_end_date: {
 			type: Date,
 			require: true,
 		},
@@ -55,16 +55,12 @@ const discountSchema = new Schema(
 			default: [],
 		},
 		// Maximum usage limit per user.
-		discount_max_per_user: {
+		discount_max_uses_per_user: {
 			type: Number,
 			require: true,
 		},
 		// Minimum order amount for the discount to be applicable
-		discount_min_order: {
-			type: Number,
-			require: true,
-		},
-		discount_max_amount_per_order: {
+		discount_min_order_value: {
 			type: Number,
 			require: true,
 		},
@@ -74,13 +70,13 @@ const discountSchema = new Schema(
 			default: false,
 		},
 		// Target audience for the discount
-		discount_appliesTo: {
+		discount_applies_to: {
 			type: String,
 			enum: ['all', 'specific'],
 			require: true,
 		},
 		// Array of product id to which the discount is applicable
-		discount_productIds: {
+		discount_product_ids: {
 			type: [Schema.ObjectId],
 			ref: 'Product',
 			default: [],

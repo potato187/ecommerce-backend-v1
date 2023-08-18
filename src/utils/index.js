@@ -1,7 +1,7 @@
 'use strict';
 const _ = require('lodash');
+const { Types } = require('mongoose');
 const crypto = require('node:crypto');
-const { type } = require('node:os');
 
 const typeOf = (value) => {
 	return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
@@ -59,6 +59,10 @@ const flattenObject = (nestedObject = null, prefix = '') => {
 	}, {});
 };
 
+const convertToObjectMongodb = (id) => {
+	return new Types.ObjectId(id);
+};
+
 module.exports = {
 	getInfoData,
 	generateToken,
@@ -66,4 +70,5 @@ module.exports = {
 	getUnSelectData,
 	removeFalsyProperties,
 	flattenObject,
+	convertToObjectMongodb,
 };

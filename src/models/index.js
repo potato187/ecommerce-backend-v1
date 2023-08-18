@@ -7,4 +7,5 @@ module.exports = {
 	ElectronicModel: require('./electronic.model'),
 	FurnitureModel: require('./furniture.model'),
 	InventoryModel: require('./inventory.model'),
+	DiscountModel: require('./discount.model'),
 };
