@@ -20,8 +20,13 @@ const findAllDiscountCodeSelect = async ({ filter, select = [], limit = 50, page
 	return await DiscountModel.find(filter).sort(sortBy).skip(skip).limit(limit).select(getSelectData(select)).lean();
 };
 
+const checkDiscountExist = async ({ model, filter }) => {
+	return model.findOne(filter).lean();
+};
+
 module.exports = {
 	findDiscountByFilter,
 	findAllDiscountCodeUnselect,
 	findAllDiscountCodeSelect,
+	checkDiscountExist,
 };
