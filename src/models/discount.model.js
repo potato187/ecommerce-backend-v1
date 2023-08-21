@@ -67,7 +67,7 @@ const discountSchema = new Schema(
 		// Flag indicate whether the discount is currently active
 		discount_is_active: {
 			type: Boolean,
-			default: false,
+			default: true,
 		},
 		// Target audience for the discount
 		discount_applies_to: {

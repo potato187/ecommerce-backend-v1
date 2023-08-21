@@ -59,7 +59,7 @@ class DiscountService {
 
 		const foundDiscount = await findDiscountByFilter({ discount_code, discount_shopId });
 
-		if (foundDiscount && foundDiscount.discount_is_active) {
+		if (foundDiscount) {
 			throw new BadRequestError('Discount have existed!');
 		}
 
@@ -85,7 +85,7 @@ class DiscountService {
 
 	static async updateDiscountCode() {}
 
-	static async getAllDiscountCodeWidthProduct({ discount_code, discount_shopId, userId, limit, page }) {
+	static async getAllDiscountCodeWidthProducts({ discount_code, discount_shopId, limit = 25, page = 1 }) {
 		discount_shopId = convertToObjectMongodb(discount_shopId);
 		const foundDiscount = await findDiscountByFilter({ discount_code, discount_shopId });
 
@@ -96,27 +96,29 @@ class DiscountService {
 		const { discount_applies_to, discount_product_ids } = foundDiscount;
 
 		const filter = {
-			idPublished: true,
+			isPublished: true,
 		};
 
 		if (discount_applies_to === 'all') {
-			filter.product_shop = discount_shopId;
+			filter.product_shop = convertToObjectMongodb(discount_shopId);
 		}
 
-		if (discount_applies_to === 'specify') {
-			filter.product_shop = { $in: discount_product_ids };
+		if (discount_applies_to === 'specific') {
+			filter._id = { $in: discount_product_ids };
 		}
 
-		return await findAllProduct({
+		const products = await findAllProduct({
 			filter,
 			limit: +limit,
 			page: +page,
 			sort: 'ctime',
 			select: ['product_name'],
 		});
+
+		return products;
 	}
 
-	static async getAllDiscountCodeWidthShop({ limit, page, discount_shopId }) {
+	static async getAllDiscountCodeWidthShop({ limit = 25, page = 1, discount_shopId }) {
 		const discounts = await findAllDiscountCodeUnselect({
 			filter: {
 				discount_shopId: convertToObjectMongodb(discount_shopId),
@@ -126,14 +128,16 @@ class DiscountService {
 			limit: +limit,
 			page: +page,
 		});
+
+		return discounts;
 	}
 
-	static async getDiscountAmount({ code, userId, shopId, products }) {
+	static async getDiscountAmount({ discount_code, userId, discount_shopId, products }) {
 		const foundDiscount = await checkDiscountExist({
 			model: DiscountModel,
 			filter: {
-				discount_code: code,
-				discount_shopId: convertToObjectMongodb(shopId),
+				discount_code,
+				discount_shopId: convertToObjectMongodb(discount_shopId),
 			},
 		});
 
@@ -149,6 +153,9 @@ class DiscountService {
 			discount_min_order_value,
 			discount_max_uses_per_user,
 			discount_users_used,
+			discount_type,
+			discount_value,
+			discount_product_ids,
 		} = foundDiscount;
 		const currentDate = new Date();
 		const startDate = new Date(discount_start_date);
@@ -163,6 +170,7 @@ class DiscountService {
 		}
 
 		let totalOrder = 0;
+		/* bug:: We haven't check productId,quantity,price of product of the user's products within discount_product_ids*/
 		if (discount_min_order_value > 0) {
 			totalOrder = products.reduce((acc, product) => {
 				return acc + product.product_price * product.product_quantity;
@@ -181,7 +189,9 @@ class DiscountService {
 		if (userUsedDiscount) {
 		}
 
+		console.log(products, discount_value);
 		const amount = discount_type === 'fixed_amount' ? discount_value : totalOrder * (discount_value / 100);
+
 		return {
 			totalOrder,
 			discount: amount,
